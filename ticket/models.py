@@ -8,4 +8,3 @@ class TicketModel(models.Model):
     ticketInfo = models.CharField(max_length=2000)
     userId = models.CharField(max_length=20, null=True, blank=True)
     assigned = models.BooleanField(default=False)
-
