@@ -17,3 +17,5 @@ class TicketModel(models.Model):
     
 class MailModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    mail_message = models.CharField(max_length=30)
+    ticket_id = models.CharField(max_length=60)

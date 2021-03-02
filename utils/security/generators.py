@@ -41,12 +41,20 @@ def generate_account_id(type):
             continue
           else:
             return id  
-    
+    elif type == "Ticket Manager": 
+          no = UserModel.objects.all().count() + 1
+          id = "TMN" + str(no) + "/" + str(todays_date.year)
+          while UserModel.objects.filter(userId=id).exists():
+            no = UserModel.objects.all().count() + 1
+            id = "TMN" + str(no) + "/" + str(todays_date.year)
+            continue
+          else:
+            return id 
 def generate_ticket_id():
     todays_date = date.today()
     no = TicketModel.objects.all().count() + 1
     id = "TK" + str(no) + "/" + str(todays_date.year)
-    while TicketModel.objects.filter(userId=id).exists():
+    while TicketModel.objects.filter(ticketId=id).exists():
         no = TicketModel.objects.all().count() + 1
         id = "TK" + str(no) + "/" + str(todays_date.year)
         continue
