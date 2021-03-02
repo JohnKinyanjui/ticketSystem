@@ -1,26 +1,28 @@
 from django.http import JsonResponse
 from utils.security.generators import *
-from utils.security.utils import check_password
+from utils.security.utils import check_password, hash_password
+from security.models import SystemUser
 
 
 def create_account(userToken ,userImage, fullName, password, role):
-    if UserModel.objects.filter(token=userToken, role="Field Manager").exists() is False:
+    if SystemUser.objects.filter(token=userToken).exists() is False:
         return JsonResponse({
             'code': 1,
             'message': 'Permission Denied'
         })
 
-    accountId = generate_account_id()
+    accountId = generate_account_id(role)
     userModel = UserModel(
         userId=accountId,
         userImage=userImage,
         fullName=fullName,
-        password=password,
+        password=hash_password(password),
         role=role
     )
     userModel.save()
     return JsonResponse({
         'code': 0,
+        'accountId': accountId,
         'message': 'Account created'
     })
 
@@ -48,7 +50,7 @@ def create_mtn_account(userToken ,userImage, fullName, password, role):
 
 def authenticate_account(userId, userPassword):
     if UserModel.objects.filter(userId=userId).exists():
-        user = UserModel.objects.get()
+        user = UserModel.objects.get(userId=userId)
         if check_password(user.password, userPassword):
             token = token_generator()
             UserModel.objects.filter(id=user.id).update(token=token)

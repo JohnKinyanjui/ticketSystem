@@ -33,7 +33,7 @@ def authenticate_sys_admin(userId, password):
                 result = _generate_jwt_token
             
             token = _generate_jwt_token()
-            SystemUser.objects.filter(userId=userId).update(token=result) 
+            SystemUser.objects.filter(userId=userId).update(token=token) 
             return JsonResponse({
                 'code':0,
                 'token':token,

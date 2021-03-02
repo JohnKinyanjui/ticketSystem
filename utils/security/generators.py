@@ -1,17 +1,15 @@
 import jwt
 from django.conf import settings
-from datetime import  timedelta, datetime
+from datetime import date, datetime, timedelta
 from accounts.models import *
+import random
+import string
 
 
 def _generate_jwt_token():
     dt = datetime.now() + timedelta(days=60)
-    token = jwt.encode({
-        'id': 0,
-        'exp': int(dt.strftime('%s'))
-    }, settings.SECRET_KEY, algorithm='HS256')
-
-    return token.decode('utf-8')
+    token = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(50))
+    return token
 
 
 def token_generator():
@@ -22,5 +20,23 @@ def token_generator():
     else:
         return _generate_jwt_token()
 
-def generate_account_id():
-    pass
+def generate_account_id(type):
+    todays_date = date.today()
+    if type == "Field Agent":
+        no = UserModel.objects.all().count() + 1
+        id = "FAG" + str(no) + "/" + str(todays_date.year)
+        while UserModel.objects.filter(userId=id).exists():
+            no = UserModel.objects.all().count() + 1
+            id = "FAG" + str(no) + "/" + str(todays_date.year)
+            continue
+        else:
+            return id
+    elif type == "Field Manager": 
+          no = UserModel.objects.all().count() + 1
+          id = "FMN" + str(no) + "/" + str(todays_date.year)
+          while UserModel.objects.filter(userId=id).exists():
+            no = UserModel.objects.all().count() + 1
+            id = "FMN" + str(no) + "/" + str(todays_date.year)
+            continue
+          else:
+            return id  
