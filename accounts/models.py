@@ -1,6 +1,5 @@
 from django.db import models
 
-roles = {"Field Manager", "Field Agent", "Mtn Admin"}
 # Create your models here
 
 class UserModel(models.Model):

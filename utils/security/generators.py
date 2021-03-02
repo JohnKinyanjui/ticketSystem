@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 from accounts.models import *
 import random
 import string
+from ticket.models import TicketModel
 
 
 def _generate_jwt_token():
@@ -40,3 +41,14 @@ def generate_account_id(type):
             continue
           else:
             return id  
+    
+def generate_ticket_id():
+    todays_date = date.today()
+    no = TicketModel.objects.all().count() + 1
+    id = "TK" + str(no) + "/" + str(todays_date.year)
+    while TicketModel.objects.filter(userId=id).exists():
+        no = TicketModel.objects.all().count() + 1
+        id = "TK" + str(no) + "/" + str(todays_date.year)
+        continue
+    else:
+        return id            

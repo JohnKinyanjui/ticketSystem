@@ -10,6 +10,14 @@ def create_account(userToken ,userImage, fullName, password, role):
             'code': 1,
             'message': 'Permission Denied'
         })
+    roles = ["Field Manager", "Field Agent", "Ticket Manager"]
+    
+    if role not in roles:
+        return JsonResponse({
+            'code':1,
+            'message':"This role is not available"
+        })
+        
 
     accountId = generate_account_id(role)
     userModel = UserModel(
@@ -25,28 +33,6 @@ def create_account(userToken ,userImage, fullName, password, role):
         'accountId': accountId,
         'message': 'Account created'
     })
-
-def create_mtn_account(userToken ,userImage, fullName, password, role):
-    if UserModel.objects.filter(token=userToken, role="Field Manager").exists() is False:
-        return JsonResponse({
-            'code': 1,
-            'message': 'Permission Denied'
-        })
-
-    accountId = generate_account_id()
-    userModel = UserModel(
-        userId=accountId,
-        userImage=userImage,
-        fullName=fullName,
-        password=password,
-        role=role
-    )
-    userModel.save()
-    return JsonResponse({
-        'code': 0,
-        'message': 'Account created'
-    })
-
 
 def authenticate_account(userId, userPassword):
     if UserModel.objects.filter(userId=userId).exists():
